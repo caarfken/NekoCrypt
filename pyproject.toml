@@ -12,7 +12,7 @@ license = { text = "Apache-2.0" }
 classifiers = [
     "Programming Language :: Python :: 3",
     "Operating System :: OS Independent",
-    "License: Apache-2.0"
+    "License-Expression: Apache-2.0",
 ]
 dependencies = []
 
