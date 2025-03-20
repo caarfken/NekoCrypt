@@ -1,0 +1,1 @@
+from .nekocrypt import NekoCrypt
