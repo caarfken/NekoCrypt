@@ -9,16 +9,13 @@ class NekoCrypt:
         password_bytes = [ord(char) for char in password]
         password = bytes([next(cycle(password_bytes)) for _ in range(messagelength)])
 
-
         return password
 
     def encrypt(self, password, message) -> bytes:
         '''
         Encrypts a message using NekoCrypt. Takes in password and message. Returns a bytes object.
         '''
-        
         password = self.processPassword(password, len(message))
-        
         message = bytearray(message)  # Convert to bytearray for better performance
         
         encryptedMessage = bytearray() # Use bytearray for better performance
@@ -41,10 +38,8 @@ class NekoCrypt:
         '''
         Decrypts a message using NekoCrypt. Takes in lengthened password and message. Returns a bytes object.
         '''
-        
         message = bytearray(message)
         password = self.processPassword(password, len(message))
-        
         
         decryptedMessage = bytearray()  # Use bytearray for better performance
         # Find the offset where the footer starts
