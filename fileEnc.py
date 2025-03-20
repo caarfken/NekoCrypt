@@ -24,9 +24,6 @@ def main():
         return
     
     password = getpass("Enter password: ")
-    print("Processing Password...", end="")
-    password = nk.processPassword(list(password), os.stat(fileName).st_size)
-    print("done")
     
     with open(fileName, "rb") as file:
         data = file.read()
@@ -34,10 +31,10 @@ def main():
     print("Encrypting/Decrypting...", end="")
     if operationType == "e":
         result = nk.encrypt(password, data)
-        newFileName = fileName + "(Encrypted)"
+        newFileName = fileName + ".encrypted"
     else:
         result = nk.decrypt(password, data)
-        newFileName = fileName + "(Decrypted)"
+        newFileName = fileName + ".decrypted"
     print("done")
     
     print("Writing result...", end="")
