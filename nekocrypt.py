@@ -1,7 +1,7 @@
 from itertools import cycle
 
 class NekoCrypt:
-    def processPassword(self, password: list[str], messagelength: int) -> bytes:
+    def processPassword(self, password: str, messagelength: int) -> bytes:
         '''
         Takes in password and extends it for use with NekoCrypt. Returns VERY long bytes sequence.
         '''
@@ -12,10 +12,15 @@ class NekoCrypt:
 
         return password
 
-    def encrypt(self, password: bytes, message: bytes) -> bytes:
+    def encrypt(self, password, message) -> bytes:
         '''
-        Encrypts a message using NekoCrypt. Takes in lengthened password and message. Returns a bytes object.
+        Encrypts a message using NekoCrypt. Takes in password and message. Returns a bytes object.
         '''
+        
+        password = self.processPassword(password, len(message))
+        
+        message = bytearray(message)  # Convert to bytearray for better performance
+        
         encryptedMessage = bytearray() # Use bytearray for better performance
         zeroMarkers = []
         footer = b"Encrypted with NekoCrypt"
@@ -32,10 +37,15 @@ class NekoCrypt:
         # Append footer and zero markers to the encrypted message
         return encryptedMessage + footer + bytes(''.join(zeroMarkers), "utf-8")
     
-    def decrypt(self, password: bytes, message: bytes) -> bytes:
+    def decrypt(self, password, message) -> bytes:
         '''
         Decrypts a message using NekoCrypt. Takes in lengthened password and message. Returns a bytes object.
         '''
+        
+        message = bytearray(message)
+        password = self.processPassword(password, len(message))
+        
+        
         decryptedMessage = bytearray()  # Use bytearray for better performance
         # Find the offset where the footer starts
         offset = message.find(b"Encrypted with NekoCrypt") + 25
