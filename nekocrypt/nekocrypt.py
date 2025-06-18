@@ -7,7 +7,7 @@ class NekoCrypt:
     decrypt(password, message) to decrypt
     password must be str and message must be bytes, will be fixed later.
     '''
-    def processPassword(self, password: str, messagelength: int) -> bytes:
+    def __processPassword(self, password: str, messagelength: int) -> bytes:
         '''
         Takes in password and extends it for use with NekoCrypt. Returns VERY long bytes sequence.
         '''
@@ -21,7 +21,7 @@ class NekoCrypt:
         '''
         Encrypts a message using NekoCrypt. Takes in password and message. Returns a bytes object.
         '''
-        password = self.processPassword(password, len(message))
+        password = self.__processPassword(password, len(message))
         message = bytearray(message)  # Convert to bytearray for better performance
         
         encryptedMessage = bytearray() # Use bytearray for better performance
@@ -45,7 +45,7 @@ class NekoCrypt:
         Decrypts a message using NekoCrypt. Takes in lengthened password and message. Returns a bytes object.
         '''
         message = bytearray(message)
-        password = self.processPassword(password, len(message))
+        password = self.__processPassword(password, len(message))
         
         decryptedMessage = bytearray()  # Use bytearray for better performance
         # Find the offset where the footer starts
