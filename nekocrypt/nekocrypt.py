@@ -1,6 +1,12 @@
 from itertools import cycle
 
 class NekoCrypt:
+    '''
+    Usage:
+    encrypt(password, message) to encrypt
+    decrypt(password, message) to decrypt
+    password must be str and message must be bytes, will be fixed later.
+    '''
     def processPassword(self, password: str, messagelength: int) -> bytes:
         '''
         Takes in password and extends it for use with NekoCrypt. Returns VERY long bytes sequence.
@@ -10,8 +16,8 @@ class NekoCrypt:
         password = bytes([next(cycle(password_bytes)) for _ in range(messagelength)])
 
         return password
-
-    def encrypt(self, password, message) -> bytes:
+    # TODO: fix the type mixing disaster
+    def encrypt(self, password: str, message: bytes) -> bytes:
         '''
         Encrypts a message using NekoCrypt. Takes in password and message. Returns a bytes object.
         '''
