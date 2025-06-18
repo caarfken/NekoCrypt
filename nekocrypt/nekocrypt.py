@@ -1,4 +1,5 @@
 from itertools import cycle
+import base64
 
 class NekoCrypt:
     '''
@@ -17,7 +18,7 @@ class NekoCrypt:
 
         return password
     # TODO: fix the type mixing disaster
-    def encrypt(self, password: str, message: bytes) -> bytes:
+    def encrypt(self, password: str, message, safeMode=False) -> bytes:
         '''
         Encrypts a message using NekoCrypt. Takes in password and message. Returns a bytes object.
         '''
@@ -38,12 +39,17 @@ class NekoCrypt:
             encryptedMessage.append(char)
         
         # Append footer and zero markers to the encrypted message
-        return encryptedMessage + footer + bytes(''.join(zeroMarkers), "utf-8")
+        encryptedMessage = encryptedMessage + footer + bytes(''.join(zeroMarkers), "utf-8")
+        if safeMode:
+            return base64.b64encode(encryptedMessage)
+        return encryptedMessage
     
-    def decrypt(self, password, message) -> bytes:
+    def decrypt(self, password, message, safeMode=False) -> bytes:
         '''
         Decrypts a message using NekoCrypt. Takes in lengthened password and message. Returns a bytes object.
         '''
+        if safeMode:
+            message = base64.b64decode(message).decode("ascii")        
         message = bytearray(message)
         password = self.__processPassword(password, len(message))
         
