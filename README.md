@@ -5,4 +5,4 @@ An encryption program
 run `nekocrypt` in same folder as file to be encrypted/decrypted and follow instructions
 
 ## Library Usage
-Coming soon
+Refer to the docstring for class NekoCrypt
