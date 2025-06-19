@@ -7,7 +7,7 @@ class NekoCrypt:
     Usage:
     encrypt(password, message) to encrypt
     decrypt(password, message) to decrypt
-    password must be str and message must be bytes, will be fixed later.
+    safeMode prevents usage of non-printable characters but significantly lengthens output
     '''
     def __processPassword(self, password: str, messagelength: int) -> bytes:
         '''
@@ -21,10 +21,12 @@ class NekoCrypt:
     # TODO: fix the type mixing disaster
     def encrypt(self, password: str, message: Union[str, bytes], safeMode=False) -> bytes:
         '''
-        Encrypts a message using NekoCrypt. Takes in password and message. Returns a bytes object.
+        Encrypts a message using NekoCrypt. Takes in password and message.
+        If safeMode, encodes to base64 (Useful for printing.) and returns a string.
+        Otherwise, returns a bytearray object.
         '''
         password = self.__processPassword(password, len(message))
-        message = bytearray(message, "utf-8")  # Convert to bytearray for better performance
+        message = bytearray(message, "utf-8")  # Use bytearray for better performance
         
         encryptedMessage = bytearray() # Use bytearray for better performance
         zeroMarkers = []
@@ -47,7 +49,9 @@ class NekoCrypt:
     
     def decrypt(self, password, message, safeMode=False) -> bytes:
         '''
-        Decrypts a message using NekoCrypt. Takes in lengthened password and message. Returns a bytes object.
+        Decrypts a message using NekoCrypt. Takes in password and message. 
+        If safeMode, decodes base64 for the encrypted message first and returns a string.
+        Otherwise, returns a bytearray.
         '''
         if safeMode:
             message = base64.b64decode(message).decode("utf-8")        
