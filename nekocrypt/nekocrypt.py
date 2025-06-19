@@ -7,7 +7,7 @@ class NekoCrypt:
     Usage:
     encrypt(password, message) to encrypt
     decrypt(password, message) to decrypt
-    safeMode prevents usage of non-printable characters but significantly lengthens output
+    useB64 prevents usage of non-printable characters but significantly lengthens output
     '''
     def __processPassword(self, password: str, messagelength: int) -> bytes:
         '''
@@ -18,10 +18,10 @@ class NekoCrypt:
         password = bytes([next(cycle(password_bytes)) for _ in range(messagelength)])
 
         return password
-    def encrypt(self, password: str, message: Union[str, bytes], safeMode=False) -> Union[str, bytearray]:
+    def encrypt(self, password: str, message: Union[str, bytes], useB64=False) -> Union[str, bytearray]:
         '''
         Encrypts a message using NekoCrypt. Takes in password and message.
-        If safeMode, encodes to base64 (Useful for printing.) and returns a string.
+        If useB64, encodes to base64 (Useful for printing) and returns a string.
         Otherwise, returns a bytearray object.
         '''
         password = self.__processPassword(password, len(message))
@@ -42,17 +42,17 @@ class NekoCrypt:
         
         # Append footer and zero markers to the encrypted message
         encryptedMessage = encryptedMessage + footer + bytes(''.join(zeroMarkers), "utf-8")
-        if safeMode:
+        if useB64:
             return base64.b64encode(encryptedMessage).decode("utf-8")
         return encryptedMessage
     
-    def decrypt(self, password, message: Union[str, bytes], safeMode=False) -> Union[str, bytearray]:
+    def decrypt(self, password, message: Union[str, bytes], useB64=False) -> Union[str, bytearray]:
         '''
         Decrypts a message using NekoCrypt. Takes in password and message. 
-        If safeMode, decodes base64 for the encrypted message first and returns a string.
+        If useB64, decodes base64 for the encrypted message first and returns a string.
         Otherwise, returns a bytearray.
         '''
-        if safeMode:
+        if useB64:
             message = base64.b64decode(message).decode("utf-8")        
         message = bytearray(message)
         password = self.__processPassword(password, len(message))
@@ -68,6 +68,6 @@ class NekoCrypt:
                 # Subtract password value and wrap around using modulo 256
                 char = (char - password[i]) % 256
             decryptedMessage.append(char)
-        if safeMode:
+        if useB64:
             return decryptedMessage.decode("utf-8")
         return decryptedMessage
