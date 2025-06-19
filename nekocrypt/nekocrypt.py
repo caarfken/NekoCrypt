@@ -24,7 +24,7 @@ class NekoCrypt:
         If useB64, encodes to base64 (Useful for printing) and returns a string.
         Otherwise, returns a bytearray object.
         '''
-        password = self.__processPassword(password, len(message))
+        password = self.__processPassword(password, len(bytes(message, "utf-8")))
         message = bytearray(message, "utf-8")  # Use bytearray for better performance
         
         encryptedMessage = bytearray() # Use bytearray for better performance
