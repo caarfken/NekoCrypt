@@ -43,7 +43,7 @@ class NekoCrypt:
         # Append footer and zero markers to the encrypted message
         encryptedMessage = encryptedMessage + footer + bytes(''.join(zeroMarkers), "utf-8")
         if useB64:
-            return base64.b64encode(encryptedMessage).decode("utf-8")
+            return base64.b64encode(encryptedMessage).decode("ascii")
         return encryptedMessage
     
     def decrypt(self, password, message: Union[str, bytes], useB64=False) -> Union[str, bytearray]:
@@ -53,7 +53,7 @@ class NekoCrypt:
         Otherwise, returns a bytearray.
         '''
         if useB64:
-            message = base64.b64decode(message).decode("utf-8")        
+            message = base64.b64decode(message)      
         message = bytearray(message)
         password = self.__processPassword(password, len(message))
         
@@ -61,7 +61,10 @@ class NekoCrypt:
         # Find the offset where the footer starts
         offset = message.find(b"Encrypted with NekoCrypt") + 25
         # Extract zero markers positions
-        zeroPositions = {int(n) for n in message[offset:].split(b" ")}
+        try:
+            zeroPositions = {int(n) for n in message[offset:].split(b" ")}
+        except ValueError: # No zeroes
+            zeroPositions = []
         
         for i, char in enumerate(message[:offset - 25]):
             if char != 0 or i not in zeroPositions:
