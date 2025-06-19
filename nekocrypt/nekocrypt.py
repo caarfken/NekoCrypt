@@ -18,8 +18,7 @@ class NekoCrypt:
         password = bytes([next(cycle(password_bytes)) for _ in range(messagelength)])
 
         return password
-    # TODO: fix the type mixing disaster
-    def encrypt(self, password: str, message: Union[str, bytes], safeMode=False) -> bytes:
+    def encrypt(self, password: str, message: Union[str, bytes], safeMode=False) -> Union[str, bytearray]:
         '''
         Encrypts a message using NekoCrypt. Takes in password and message.
         If safeMode, encodes to base64 (Useful for printing.) and returns a string.
@@ -47,7 +46,7 @@ class NekoCrypt:
             return base64.b64encode(encryptedMessage).decode("utf-8")
         return encryptedMessage
     
-    def decrypt(self, password, message, safeMode=False) -> bytes:
+    def decrypt(self, password, message: Union[str, bytes], safeMode=False) -> Union[str, bytearray]:
         '''
         Decrypts a message using NekoCrypt. Takes in password and message. 
         If safeMode, decodes base64 for the encrypted message first and returns a string.
