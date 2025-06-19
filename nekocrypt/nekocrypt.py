@@ -1,5 +1,6 @@
 from itertools import cycle
 import base64
+from typing import Union
 
 class NekoCrypt:
     '''
@@ -18,12 +19,12 @@ class NekoCrypt:
 
         return password
     # TODO: fix the type mixing disaster
-    def encrypt(self, password: str, message, safeMode=False) -> bytes:
+    def encrypt(self, password: str, message: Union[str, bytes], safeMode=False) -> bytes:
         '''
         Encrypts a message using NekoCrypt. Takes in password and message. Returns a bytes object.
         '''
         password = self.__processPassword(password, len(message))
-        message = bytearray(message)  # Convert to bytearray for better performance
+        message = bytearray(message, "utf-8")  # Convert to bytearray for better performance
         
         encryptedMessage = bytearray() # Use bytearray for better performance
         zeroMarkers = []
@@ -41,7 +42,7 @@ class NekoCrypt:
         # Append footer and zero markers to the encrypted message
         encryptedMessage = encryptedMessage + footer + bytes(''.join(zeroMarkers), "utf-8")
         if safeMode:
-            return base64.b64encode(encryptedMessage)
+            return base64.b64encode(encryptedMessage).decode("utf-8")
         return encryptedMessage
     
     def decrypt(self, password, message, safeMode=False) -> bytes:
@@ -49,7 +50,7 @@ class NekoCrypt:
         Decrypts a message using NekoCrypt. Takes in lengthened password and message. Returns a bytes object.
         '''
         if safeMode:
-            message = base64.b64decode(message).decode("ascii")        
+            message = base64.b64decode(message).decode("utf-8")        
         message = bytearray(message)
         password = self.__processPassword(password, len(message))
         
@@ -64,5 +65,6 @@ class NekoCrypt:
                 # Subtract password value and wrap around using modulo 256
                 char = (char - password[i]) % 256
             decryptedMessage.append(char)
-        
-        return bytes(decryptedMessage)
+        if safeMode:
+            return decryptedMessage.decode("utf-8")
+        return decryptedMessage
